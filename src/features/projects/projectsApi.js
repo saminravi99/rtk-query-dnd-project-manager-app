@@ -86,7 +86,8 @@ export const projectsApi = apiSlice.injectEndpoints({
             const draftProject = draft.find((p) => p.id == args.id);
             draftProject.assignedTeam = args.data.assignedTeam;
             draftProject.teamId = args.data.teamId;
-            return draft;
+            console.log(JSON.stringify(draftProject));
+            return draft 
           })
         );
         // optimistic cache update end

@@ -1,9 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { projectSelected } from "../../features/projects/projectsSlice";
+import { changeTeamProjectId, newId, projectSelected } from "../../features/projects/projectsSlice";
 import { teamSelected } from "../../features/teams/teamsSlice";
 
 const ProjectOptions = ({ teamId, teamName, projectId }) => {
+  console.log(projectId);
   const dispatch = useDispatch();
 
   return (
@@ -15,7 +16,7 @@ const ProjectOptions = ({ teamId, teamName, projectId }) => {
           onClick={() => {
             console.log("clicked");
             dispatch(teamSelected({ teamId, teamName }));
-            dispatch(projectSelected({ projectId }));
+            dispatch(changeTeamProjectId({ changeTeamProjectId: projectId }));
           }}
           className="flex items-center justify-center  w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
         >
@@ -43,7 +44,10 @@ const ProjectOptions = ({ teamId, teamName, projectId }) => {
           >
             ✕
           </label>
-          <ul tabIndex={1} className="menu pt-3 w-auto font-bold hover:rounded-xl">
+          <ul
+            tabIndex={1}
+            className="menu pt-3 w-auto font-bold hover:rounded-xl"
+          >
             <li>
               <label
                 onClick={() => {

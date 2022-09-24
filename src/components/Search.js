@@ -4,6 +4,7 @@ import { searchedText } from "../features/projects/projectsSlice";
 import { useDispatch } from "react-redux";
 import { useGetSearchedProjectsQuery } from "../features/projects/projectsApi";
 import { useSelector } from "react-redux";
+import { apiSlice } from "../features/api/apiSlice";
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const Search = () => {
   //handle change function debounce
   const handleChange = (e) => {
     e.preventDefault();
+    dispatch(apiSlice.util.invalidateTags(["Projects"]));
     dispatch(searchedText({ searchedText: e.target.value }));
   };
   const debouncedSearch = debounce(handleChange, 800);

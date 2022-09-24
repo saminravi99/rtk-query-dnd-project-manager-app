@@ -8,6 +8,7 @@ import { projectSelected } from "../../features/projects/projectsSlice";
 import { useGetSearchedProjectsQuery } from "../../features/projects/projectsApi";
 
 const Project = ({ status, project, index }) => {
+  console.log(project);
   const dispatch = useDispatch();
   const { assignedTeam, projectTitle, createdAt, creatorImg, teamId, id } =
     project || {};
@@ -63,11 +64,11 @@ const Project = ({ status, project, index }) => {
   const { data: searchedProjects } = useGetSearchedProjectsQuery(text, {
     skip: !text,
   });
-  console.log(searchedProjects);
 
   //highlight the searched projects
 
   let highlightedProject = searchedProjects?.find((p) => p.id === id);
+  console.log(highlightedProject, "hello");
 
   if (!text) {
     highlightedProject = null;

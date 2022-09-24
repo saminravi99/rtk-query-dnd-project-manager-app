@@ -13,8 +13,9 @@ const ChangeTeam = () => {
   const { user } = auth || {};
   const { email } = user || {};
 
-  const { projectId } = useSelector((state) => state.projects) || {};
-  const { data: project } = useGetProjectQuery(projectId, { skip: !projectId });
+  const {changeTeamProjectId } = useSelector((state) => state.projects) || {};
+  console.log(changeTeamProjectId);
+  const { data: project } = useGetProjectQuery(changeTeamProjectId, { skip: !changeTeamProjectId });
 
   const { data: teams, isLoading, isError, error } = useGetTeamsQuery(email);
   const [changeTeam] = useChangeTeamMutation();
