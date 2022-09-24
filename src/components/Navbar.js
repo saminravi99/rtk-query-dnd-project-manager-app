@@ -17,10 +17,8 @@ const Navbar = () => {
   const location = useLocation();
   return (
     <div className="flex items-center flex-shrink-0 w-full h-16 px-10 bg-white bg-opacity-75">
-      <img src={logoImage} className="h-10 w-10" />
-      {location.pathname === "/projects" && (
-        <Search/>
-      )}
+      <img src={logoImage} className="h-10 w-10" alt="logo" />
+      {location.pathname === "/projects" && <Search />}
       <div className="ml-10">
         <Link
           className={`mx-2 text-sm font-semibold ${
@@ -49,7 +47,11 @@ const Navbar = () => {
           Log Out
         </span>
       </div>
-      <button className="flex items-center justify-center w-10 h-10 ml-auto overflow-hidden rounded-full cursor-pointer ring-2 ring-indigo-500">
+
+      <button className="flex items-center justify-center ml-auto mx-3 overflow-hidden ">
+        <h2 className={`text-md font-bold`}>Hello, Mr. {name}</h2>
+      </button>
+      <button className="flex items-center justify-center w-10 h-10 overflow-hidden rounded-full cursor-pointer ring-2 ring-indigo-500">
         <img className="" src={img} alt="" />
       </button>
     </div>

@@ -10,6 +10,9 @@ export const teamsApi = apiSlice.injectEndpoints({
       query: (teamId) => `/teams/${teamId}`,
       providesTags: ["Team"],
     }),
+    getAllTeams: builder.query({
+      query: () => `/teams`,
+    }),
     addTeam: builder.mutation({
       query: ({ creatorEmail, data }) => ({
         url: "/teams",
@@ -92,4 +95,5 @@ export const {
   useAddTeamMutation,
   useAddTeamMemberMutation,
   useDeleteTeamMutation,
+  useGetAllTeamsQuery
 } = teamsApi;

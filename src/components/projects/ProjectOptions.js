@@ -1,10 +1,9 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { changeTeamProjectId, newId, projectSelected } from "../../features/projects/projectsSlice";
+import { useDispatch} from "react-redux";
+import { changeTeamProjectId} from "../../features/projects/projectsSlice";
 import { teamSelected } from "../../features/teams/teamsSlice";
 
 const ProjectOptions = ({ teamId, teamName, projectId }) => {
-  console.log(projectId);
   const dispatch = useDispatch();
 
   return (
@@ -14,7 +13,6 @@ const ProjectOptions = ({ teamId, teamName, projectId }) => {
           htmlFor="project-option"
           tabIndex={1}
           onClick={() => {
-            console.log("clicked");
             dispatch(teamSelected({ teamId, teamName }));
             dispatch(changeTeamProjectId({ changeTeamProjectId: projectId }));
           }}

@@ -9,12 +9,12 @@ import Error from "../ui/Error";
 
 const AddTeam = () => {
   const dispatch = useDispatch();
-  const [addTeam, { data: team }] = useAddTeamMutation();
-  const { data: members, isLoading, isError, error } = useGetMembersQuery();
+  const [addTeam] = useAddTeamMutation();
+  const { data: members, isLoading, isError} = useGetMembersQuery();
   const { color } = useSelector((state) => state.teams) || {};
   const auth = useSelector((state) => state.auth);
   const { user } = auth || {};
-  const { email, img, id } = user || {};
+  const { email, img} = user || {};
   let options = [];
   if (members?.length > 0 && !isLoading && !isError) {
     options = members

@@ -10,7 +10,7 @@ const AddProject = () => {
   const { user } = auth || {};
   const { email } = user || {};
 
-  const { data: teams, isLoading, isError, error } = useGetTeamsQuery(email);
+  const { data: teams, isLoading, isError} = useGetTeamsQuery(email);
   const [addProject] = useAddProjectMutation();
 
   const [projectName, setProjectName] = useState("");

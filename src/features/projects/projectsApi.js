@@ -8,7 +8,9 @@ export const projectsApi = apiSlice.injectEndpoints({
     }),
     getProject: builder.query({
       query: (projectId) => `/projects/${projectId}`,
-      providesTags: ["Project"],
+      providesTags: (result, error, projectId) => [
+        { type: "Project", id: projectId },
+      ]
     }),
     addProject: builder.mutation({
       query: ({ status, data }) => ({
@@ -35,40 +37,41 @@ export const projectsApi = apiSlice.injectEndpoints({
       },
     }),
     changeStatus: builder.mutation({
-      query: ({ id, data, status, destinationStatus }) => ({
+      query: ({ id, data, status, destinationStatus, project, assignedTeam }) => ({
         url: `/projects/${id}`,
         method: "PATCH",
         body: data,
       }),
       invalidatesTags: [""],
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        console.log("hello");
-        // optimistic cache update for backlog Cache
-        const patchResult = dispatch(
+        // optimistic cache update for projects cache on status change start
+        const patchResultSource = dispatch(
           apiSlice.util.updateQueryData("getProjects", args.status, (draft) => {
             let newDraft = draft.filter((p) => p.id !== args.id);
             return newDraft;
           })
         );
-        // optimistic cache update end for backlog Cache
+
+        const patchResultDestination = dispatch(
+          apiSlice.util.updateQueryData(
+            "getProjects",
+            args.destinationStatus,
+            (draft) => {
+             
+              let newProject = {  ...args.project, projectStatus: args.destinationStatus };
+              draft.push(newProject);
+              return draft;
+            }
+          )
+        );
+        // optimistic cache update end for Projects Cache on status change end
 
         // catch error and revert optimistic cache update
         try {
-          const res = await queryFulfilled;
-          if (res?.data?.teamId) {
-            dispatch(
-              apiSlice.util.updateQueryData(
-                "getProjects",
-                args.destinationStatus,
-                (draft) => {
-                  let newDraft = [...draft, res?.data];
-                  return newDraft;
-                }
-              )
-            );
-          }
+          await queryFulfilled;
         } catch (error) {
-          patchResult.undo();
+          patchResultSource.undo();
+          patchResultDestination.undo();
         }
       },
     }),
@@ -78,27 +81,13 @@ export const projectsApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: [],
-      async onQueryStarted(args, { queryFulfilled, dispatch }) {
-        // optimistic cache update start
-        const patchResult = dispatch(
-          apiSlice.util.updateQueryData("getProjects", args.status, (draft) => {
-            const draftProject = draft.find((p) => p.id == args.id);
-            draftProject.assignedTeam = args.data.assignedTeam;
-            draftProject.teamId = args.data.teamId;
-            console.log(JSON.stringify(draftProject));
-            return draft 
-          })
-        );
-        // optimistic cache update end
-
-        //catch error and undo optimistic cache update
-        try {
-          await queryFulfilled;
-        } catch (err) {
-          patchResult.undo();
+      invalidatesTags: (result, error, args) => [
+        "Projects",
+        {
+          type: "Project",
+          id: args.id,
         }
-      },
+      ],
     }),
     deleteProject: builder.mutation({
       query: ({ id, status }) => ({
@@ -124,9 +113,9 @@ export const projectsApi = apiSlice.injectEndpoints({
         }
       },
     }),
-    getSearchedProjects : builder.query({
+    getSearchedProjects: builder.query({
       query: (searchTerm) => `/projects?projectTitle_like=${searchTerm}`,
-    })
+    }),
   }),
 });
 
@@ -137,5 +126,5 @@ export const {
   useChangeTeamMutation,
   useChangeStatusMutation,
   useDeleteProjectMutation,
-  useGetSearchedProjectsQuery
+  useGetSearchedProjectsQuery,
 } = projectsApi;

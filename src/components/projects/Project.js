@@ -1,21 +1,17 @@
 import React from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import { useSelector } from "react-redux";
-import { useGetTeamsQuery } from "../../features/teams/teamsApi";
+import { useGetAllTeamsQuery} from "../../features/teams/teamsApi";
 import ProjectOptions from "./ProjectOptions";
 import { useDispatch } from "react-redux";
 import { projectSelected } from "../../features/projects/projectsSlice";
 import { useGetSearchedProjectsQuery } from "../../features/projects/projectsApi";
 
 const Project = ({ status, project, index }) => {
-  console.log(project);
   const dispatch = useDispatch();
   const { assignedTeam, projectTitle, createdAt, creatorImg, teamId, id } =
     project || {};
-  const auth = useSelector((state) => state.auth) || {};
-  const { user } = auth || {};
-  const { email } = user || {};
-  const { data: teams } = useGetTeamsQuery(email);
+  const { data: teams } = useGetAllTeamsQuery();
 
   const colorClasses = [
     {
@@ -68,7 +64,6 @@ const Project = ({ status, project, index }) => {
   //highlight the searched projects
 
   let highlightedProject = searchedProjects?.find((p) => p.id === id);
-  console.log(highlightedProject, "hello");
 
   if (!text) {
     highlightedProject = null;
@@ -127,6 +122,7 @@ const Project = ({ status, project, index }) => {
             <img
               className={`w-10 h-10  ml-auto rounded-full`}
               src={creatorImg}
+              alt="creator"
             />
           </div>
         </div>

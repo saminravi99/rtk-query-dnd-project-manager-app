@@ -2,8 +2,6 @@ import React from "react";
 import debounce from "lodash.debounce";
 import { searchedText } from "../features/projects/projectsSlice";
 import { useDispatch } from "react-redux";
-import { useGetSearchedProjectsQuery } from "../features/projects/projectsApi";
-import { useSelector } from "react-redux";
 import { apiSlice } from "../features/api/apiSlice";
 
 const Search = () => {
@@ -18,10 +16,6 @@ const Search = () => {
   };
   const debouncedSearch = debounce(handleChange, 800);
 
-  //   const handleRemoveSearchFilter = () => {
-  //     dispatch(searchedText({ searchedText: "" }));
-  //     document.getElementById("search").value = "";
-  //   };
   return (
     <input
       onChange={debouncedSearch}

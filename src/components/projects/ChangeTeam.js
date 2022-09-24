@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import { useGetTeamsQuery } from "../../features/teams/teamsApi";
 import Error from "../ui/Error";
 import {
@@ -14,10 +14,9 @@ const ChangeTeam = () => {
   const { email } = user || {};
 
   const {changeTeamProjectId } = useSelector((state) => state.projects) || {};
-  console.log(changeTeamProjectId);
   const { data: project } = useGetProjectQuery(changeTeamProjectId, { skip: !changeTeamProjectId });
 
-  const { data: teams, isLoading, isError, error } = useGetTeamsQuery(email);
+  const { data: teams, isLoading, isError} = useGetTeamsQuery(email);
   const [changeTeam] = useChangeTeamMutation();
   const { teamName } = useSelector((state) => state.teams) || {};
   const [team, setTeam] = useState(null);
@@ -54,6 +53,7 @@ const ChangeTeam = () => {
         .unwrap()
         .then((res) => {
           document.getElementById("change-team").checked = false;
+          // dispatch(apiSlice.util.invalidateTags(["Project"]));
         });
     } else {
       setFormError("Please select a team");

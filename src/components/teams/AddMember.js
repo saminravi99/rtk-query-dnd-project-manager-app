@@ -12,8 +12,8 @@ const AddMember = () => {
   const { teamId } = useSelector((state) => state.teams) || {};
   const [formError, setFormError] = useState("");
 
-  const { data: members, isLoading, isError, error } = useGetMembersQuery();
-  const [addTeamMember, { data: editedTeam }] = useAddTeamMemberMutation();
+  const { data: members, isLoading, isError} = useGetMembersQuery();
+  const [addTeamMember] = useAddTeamMemberMutation();
   const { data: team } = useGetTeamQuery(teamId, { skip: !teamId });
   const { membersDetails: membersDetailsArray } = team || {};
   const [teamMembers, setTeamMembers] = useState(null);
