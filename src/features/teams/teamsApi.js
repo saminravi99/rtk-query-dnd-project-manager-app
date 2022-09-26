@@ -72,7 +72,7 @@ export const teamsApi = apiSlice.injectEndpoints({
         // optimistic cache update start
         const patchResult = dispatch(
           apiSlice.util.updateQueryData("getTeams", args.creator, (draft) => {
-            draft = draft.filter((t) => Number(t?.id) != args.id);
+            draft = draft.filter((t) => Number(t?.id) !== args.id);
             return draft;
           })
         );

@@ -1,10 +1,17 @@
 import { Droppable } from "@hello-pangea/dnd";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useGetProjectsQuery } from "../../../features/projects/projectsApi";
 import Project from "../Project";
 
 const Blocked = () => {
-  const { data: blockedProjects, isLoading, isError } = useGetProjectsQuery("Blocked");
+  const { user } = useSelector((state) => state.auth) || {};
+  const { email } = user || {};
+  const {
+    data: blockedProjects,
+    isLoading,
+    isError,
+  } = useGetProjectsQuery({ status: "Blocked", email });
   let content;
 
   if (blockedProjects?.length > 0 && !isLoading && !isError) {

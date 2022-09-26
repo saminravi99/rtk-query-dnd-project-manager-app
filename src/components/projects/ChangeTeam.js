@@ -32,6 +32,7 @@ const ChangeTeam = () => {
           label: team?.teamName,
           memberDetails: team?.membersDetails,
           teamId: team?.id,
+          teamMembers: team?.teamMembers
         };
       });
   }
@@ -39,6 +40,7 @@ const ChangeTeam = () => {
   const changedTeam = {
     assignedTeam: team?.value || "",
     teamId: team?.teamId || "",
+    teamMembers: team?.teamMembers || "",
   };
 
   const handleSubmit = (e) => {
@@ -49,6 +51,7 @@ const ChangeTeam = () => {
         id: project?.id,
         data: changedTeam,
         status: "Backlog",
+        email
       })
         .unwrap()
         .then((res) => {

@@ -3,12 +3,15 @@ import { useSelector } from "react-redux";
 import { useDeleteProjectMutation } from "../../features/projects/projectsApi";
 
 const DeleteProject = () => {
+  const {user} = useSelector((state) => state.auth) || {};
+  const {email} = user || {};
   const { deleteProjectId } = useSelector((state) => state.projects) || {};
   const [deleteProject] = useDeleteProjectMutation();
   const handleDelete = () => {
     deleteProject({
       id: deleteProjectId,
       status: "Backlog",
+      email,
     })
       .unwrap()
       .then(() => {

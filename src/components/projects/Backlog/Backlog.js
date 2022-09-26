@@ -1,10 +1,13 @@
 import { Droppable } from "@hello-pangea/dnd";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useGetProjectsQuery } from "../../../features/projects/projectsApi";
 import Project from "../Project";
 
 const Backlog = () => {
-  const {data: backlogProjects, isLoading, isError} = useGetProjectsQuery("Backlog");
+  const {user} = useSelector((state) => state.auth) || {};
+  const {email} = user || {}
+  const {data: backlogProjects, isLoading, isError} = useGetProjectsQuery({status: "Backlog", email});
   let content;
 
   if(backlogProjects?.length > 0 && !isLoading && !isError) {

@@ -18,13 +18,33 @@ import { useSelector } from "react-redux";
 import Loader from "../components/ui/Loader";
 
 const Projects = () => {
+  const { user } = useSelector((state) => state.auth) || {};
+  const { email } = user || {};
   const { projectId } = useSelector((state) => state.projects) || {};
-  const { isLoading: isBacklogLoading } = useGetProjectQuery("Backlog");
-  const { isLoading: isReadyLoading } = useGetProjectQuery("Ready");
-  const { isLoading: isDoingLoading } = useGetProjectQuery("Doing");
-  const { isLoading: isReviewLoading } = useGetProjectQuery("Review");
-  const { isLoading: isBlockedLoading } = useGetProjectQuery("Blocked");
-  const { isLoading: isDoneLoading } = useGetProjectQuery("Done");
+  const { isLoading: isBacklogLoading } = useGetProjectQuery({
+    status: "Backlog",
+    email,
+  });
+  const { isLoading: isReadyLoading } = useGetProjectQuery({
+    status: "Ready",
+    email,
+  });
+  const { isLoading: isDoingLoading } = useGetProjectQuery({
+    status: "Doing",
+    email,
+  });
+  const { isLoading: isReviewLoading } = useGetProjectQuery({
+    status: "Review",
+    email,
+  });
+  const { isLoading: isBlockedLoading } = useGetProjectQuery({
+    status: "Blocked",
+    email,
+  });
+  const { isLoading: isDoneLoading } = useGetProjectQuery({
+    status: "Done",
+    email,
+  });
   const { data: project } = useGetProjectQuery(projectId, { skip: !projectId });
   const [changeStatus] = useChangeStatusMutation();
   const onDragEnd = (result) => {
@@ -50,6 +70,7 @@ const Projects = () => {
         status: sourceId,
         destinationStatus: destinationId,
         project: project,
+        email
       });
     }
   };

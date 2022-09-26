@@ -33,6 +33,7 @@ const AddProject = () => {
 
   const projectData = {
     teamId: team?.teamId || "",
+    teamMembers: team?.teamMembers || "",
     creatorImg: user.img,
     createdAt: `${months[new Date().getMonth()]} ${new Date().getDate()}`,
     assignedTeam: team?.value || "",
@@ -50,6 +51,7 @@ const AddProject = () => {
       addProject({
         status: "Backlog",
         data: projectData,
+        email
       })
         .unwrap()
         .then((res) => {
@@ -80,6 +82,7 @@ const AddProject = () => {
         label: team.teamName,
         memberDetails: team.membersDetails,
         teamId: team.id,
+        teamMembers: team.teamMembers
       };
     });
   }

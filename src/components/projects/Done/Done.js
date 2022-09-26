@@ -2,9 +2,16 @@ import React from 'react'
 import { Droppable } from "@hello-pangea/dnd";
 import { useGetProjectsQuery } from '../../../features/projects/projectsApi';
 import Project from '../Project';
+import { useSelector } from 'react-redux';
 
 const Done = () => {
-  const { data: doneProjects, isLoading, isError } = useGetProjectsQuery("Done");
+   const { user } = useSelector((state) => state.auth) || {};
+   const { email } = user || {};
+  const {
+    data: doneProjects,
+    isLoading,
+    isError,
+  } = useGetProjectsQuery({ status: "Done", email });
   let content;
 
   if (doneProjects?.length > 0 && !isLoading && !isError) {

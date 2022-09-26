@@ -3,17 +3,18 @@ import { apiSlice } from "../api/apiSlice";
 export const projectsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProjects: builder.query({
-      query: (status) => `/projects?projectStatus_like=${status}`,
+      query: ({ status, email }) =>
+        `/projects?projectStatus_like=${status}&teamMembers_like=${email}`,
       providesTags: ["Projects"],
     }),
     getProject: builder.query({
       query: (projectId) => `/projects/${projectId}`,
       providesTags: (result, error, projectId) => [
         { type: "Project", id: projectId },
-      ]
+      ],
     }),
     addProject: builder.mutation({
-      query: ({ status, data }) => ({
+      query: ({ status, data, email }) => ({
         url: "/projects",
         method: "POST",
         body: data,
@@ -25,7 +26,10 @@ export const projectsApi = apiSlice.injectEndpoints({
           dispatch(
             apiSlice.util.updateQueryData(
               "getProjects",
-              args.status,
+              {
+                status: args.status,
+                email: args.email,
+              },
               (draft) => {
                 draft.push(project?.data);
                 return draft;
@@ -37,7 +41,14 @@ export const projectsApi = apiSlice.injectEndpoints({
       },
     }),
     changeStatus: builder.mutation({
-      query: ({ id, data, status, destinationStatus, project, assignedTeam }) => ({
+      query: ({
+        id,
+        data,
+        status,
+        destinationStatus,
+        project,
+        email,
+      }) => ({
         url: `/projects/${id}`,
         method: "PATCH",
         body: data,
@@ -46,19 +57,31 @@ export const projectsApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         // optimistic cache update for projects cache on status change start
         const patchResultSource = dispatch(
-          apiSlice.util.updateQueryData("getProjects", args.status, (draft) => {
-            let newDraft = draft.filter((p) => p.id !== args.id);
-            return newDraft;
-          })
+          apiSlice.util.updateQueryData(
+            "getProjects",
+            {
+              status: args.status,
+              email: args.email,
+            },
+            (draft) => {
+              let newDraft = draft.filter((p) => p.id !== args.id);
+              return newDraft;
+            }
+          )
         );
 
         const patchResultDestination = dispatch(
           apiSlice.util.updateQueryData(
             "getProjects",
-            args.destinationStatus,
+            {
+              status: args.destinationStatus,
+              email: args.email,
+            },
             (draft) => {
-             
-              let newProject = {  ...args.project, projectStatus: args.destinationStatus };
+              let newProject = {
+                ...args.project,
+                projectStatus: args.destinationStatus,
+              };
               draft.push(newProject);
               return draft;
             }
@@ -76,7 +99,7 @@ export const projectsApi = apiSlice.injectEndpoints({
       },
     }),
     changeTeam: builder.mutation({
-      query: ({ id, data, status }) => ({
+      query: ({ id, data, status, email }) => ({
         url: `/projects/${id}`,
         method: "PATCH",
         body: data,
@@ -86,11 +109,11 @@ export const projectsApi = apiSlice.injectEndpoints({
         {
           type: "Project",
           id: args.id,
-        }
+        },
       ],
     }),
     deleteProject: builder.mutation({
-      query: ({ id, status }) => ({
+      query: ({ id, status, email }) => ({
         url: `/projects/${id}`,
         method: "DELETE",
       }),
@@ -98,10 +121,17 @@ export const projectsApi = apiSlice.injectEndpoints({
       async onQueryStarted(args, { queryFulfilled, dispatch }) {
         // optimistic cache update start
         const patchResult = dispatch(
-          apiSlice.util.updateQueryData("getProjects", args.status, (draft) => {
-            let newDraft = draft?.filter((p) => Number(p?.id) !== args?.id);
-            return newDraft;
-          })
+          apiSlice.util.updateQueryData(
+            "getProjects",
+            {
+              status: args.status,
+              email: args.email,
+            },
+            (draft) => {
+              let newDraft = draft?.filter((p) => Number(p?.id) !== args?.id);
+              return newDraft;
+            }
+          )
         );
         // optimistic cache update end
 
